@@ -75,7 +75,11 @@
 #define CAN_USE_AVX 0
 #endif
 
-#define likely(x) (__builtin_expect(!!(x), 1))
+#ifdef _WIN32
+# define likely( x)  (x)
+#else
+# define likely(x)   (__builtin_expect(!!(x), 1))
+#endif
 
 #ifdef LITTLE_ENDIAN
 #define uint32_t_in_expected_order(x) (x)

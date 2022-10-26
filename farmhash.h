@@ -87,25 +87,25 @@ uint64_t farmhash64_with_seeds(const char* s, size_t len,
 // Hash function for a byte array.
 // May change from time to time, may differ on different platforms, may differ
 // depending on NDEBUG.
-uint128_t farmhash128(const char* s, size_t len);
+fh_uint128_t farmhash128(const char* s, size_t len);
 
 // Hash function for a byte array.  For convenience, a 128-bit seed is also
 // hashed into the result.
 // May change from time to time, may differ on different platforms, may differ
 // depending on NDEBUG.
-uint128_t farmhash128_with_seed(const char* s, size_t len, uint128_t seed);
+fh_uint128_t farmhash128_with_seed(const char* s, size_t len, fh_uint128_t seed);
 
 // BASIC NON-STRING HASHING
 
 // This is intended to be a reasonably good hash function.
 // May change from time to time, may differ on different platforms, may differ
 // depending on NDEBUG.
-static inline uint64_t farmhash128_to_64(uint128_t x) {
+static inline uint64_t farmhash128_to_64(fh_uint128_t x) {
   // Murmur-inspired hashing.
   const uint64_t k_mul = 0x9ddfea08eb382d69ULL;
-  uint64_t a = (uint128_t_low64(x) ^ uint128_t_high64(x)) * k_mul;
+  uint64_t a = (fh_uint128_t_low64(x) ^ fh_uint128_t_high64(x)) * k_mul;
   a ^= (a >> 47);
-  uint64_t b = (uint128_t_high64(x) ^ a) * k_mul;
+  uint64_t b = (fh_uint128_t_high64(x) ^ a) * k_mul;
   b ^= (b >> 47);
   b *= k_mul;
   return b;
@@ -120,16 +120,16 @@ uint32_t farmhash_fingerprint32(const char* s, size_t len);
 uint64_t farmhash_fingerprint64(const char* s, size_t len);
 
 // Fingerprint function for a byte array.
-uint128_t farmhash_fingerprint128(const char* s, size_t len);
+fh_uint128_t farmhash_fingerprint128(const char* s, size_t len);
 
 // This is intended to be a good fingerprinting primitive.
 // See below for more overloads.
-static inline uint64_t farmhash_fingerprint_uint128_t(uint128_t x) {
+static inline uint64_t farmhash_fingerprint_uint128_t(fh_uint128_t x) {
   // Murmur-inspired hashing.
   const uint64_t k_mul = 0x9ddfea08eb382d69ULL;
-  uint64_t a = (uint128_t_low64(x) ^ uint128_t_high64(x)) * k_mul;
+  uint64_t a = (fh_uint128_t_low64(x) ^ fh_uint128_t_high64(x)) * k_mul;
   a ^= (a >> 47);
-  uint64_t b = (uint128_t_high64(x) ^ a) * k_mul;
+  uint64_t b = (fh_uint128_t_high64(x) ^ a) * k_mul;
   b ^= (b >> 44);
   b *= k_mul;
   b ^= (b >> 41);

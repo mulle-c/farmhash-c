@@ -300,20 +300,20 @@ static inline uint64_t debug_tweak64(uint64_t x) {
   return x;
 }
 
-uint128_t debug_tweak128(uint128_t x) {
+fh_uint128_t debug_tweak128(fh_uint128_t x) {
 #ifndef NDEBUG
-  uint64_t y = debug_tweak64(uint128_t_low64(x));
-  uint64_t z = debug_tweak64(uint128_t_high64(x));
+  uint64_t y = debug_tweak64(fh_uint128_t_low64(x));
+  uint64_t z = debug_tweak64(fh_uint128_t_high64(x));
   y += z;
   z += y;
-  x = make_uint128_t(y, z * k1);
+  x = make_fh_uint128_t(y, z * k1);
 #endif
 
   return x;
 }
 
 static inline uint64_t farmhash_len_16(uint64_t u, uint64_t v) {
-  return farmhash128_to_64(make_uint128_t(u, v));
+  return farmhash128_to_64(make_fh_uint128_t(u, v));
 }
 
 static inline uint64_t farmhash_len_16_mul(uint64_t u, uint64_t v, uint64_t mul) {
@@ -367,7 +367,7 @@ static inline uint64_t farmhash_na_len_17_to_32(const char *s, size_t len) {
 
 // Return a 16-byte hash for 48 bytes.  Quick and dirty.
 // Callers do best to use "random-looking" values for a and b.
-static inline uint128_t weak_farmhash_na_len_32_with_seeds_vals(
+static inline fh_uint128_t weak_farmhash_na_len_32_with_seeds_vals(
     uint64_t w, uint64_t x, uint64_t y, uint64_t z, uint64_t a, uint64_t b) {
   a += w;
   b = ror64(b + a + z, 21);
@@ -375,11 +375,11 @@ static inline uint128_t weak_farmhash_na_len_32_with_seeds_vals(
   a += x;
   a += y;
   b += ror64(a, 44);
-  return make_uint128_t(a + z, b + c);
+  return make_fh_uint128_t(a + z, b + c);
 }
 
 // Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-static inline uint128_t weak_farmhash_na_len_32_with_seeds(
+static inline fh_uint128_t weak_farmhash_na_len_32_with_seeds(
     const char* s, uint64_t a, uint64_t b) {
   return weak_farmhash_na_len_32_with_seeds_vals(fetch64(s),
                                 fetch64(s + 8),
@@ -423,8 +423,8 @@ uint64_t farmhash64_na(const char *s, size_t len) {
   uint64_t x = seed;
   uint64_t y = seed * k1 + 113;
   uint64_t z = smix(y * k2 + 113) * k2;
-  uint128_t v = make_uint128_t(0, 0);
-  uint128_t w = make_uint128_t(0, 0);
+  fh_uint128_t v = make_fh_uint128_t(0, 0);
+  fh_uint128_t w = make_fh_uint128_t(0, 0);
   x = x * k2 + fetch64(s);
 
   // Set end so that after the loop we have 1 to 64 bytes left to process.
@@ -489,8 +489,8 @@ uint64_t farmhash64_uo_with_seeds(const char *s, size_t len,
   uint64_t x = seed0;
   uint64_t y = seed1 * k2 + 113;
   uint64_t z = smix(y * k2) * k2;
-  uint128_t v = make_uint128_t(seed0, seed1);
-  uint128_t w = make_uint128_t(0, 0);
+  fh_uint128_t v = make_fh_uint128_t(seed0, seed1);
+  fh_uint128_t w = make_fh_uint128_t(0, 0);
   uint64_t u = x - z;
   x *= k2;
   uint64_t mul = k2 + (u & 0x82);
@@ -1418,7 +1418,7 @@ static inline uint64_t farmhash_cc_len_0_to_16(const char *s, size_t len) {
 
 // Return a 16-byte hash for 48 bytes.  Quick and dirty.
 // Callers do best to use "random-looking" values for a and b.
-static inline uint128_t weak_farmhash_cc_len_32_with_seeds_vals(
+static inline fh_uint128_t weak_farmhash_cc_len_32_with_seeds_vals(
     uint64_t w, uint64_t x, uint64_t y, uint64_t z, uint64_t a, uint64_t b) {
   a += w;
   b = ror64(b + a + z, 21);
@@ -1426,11 +1426,11 @@ static inline uint128_t weak_farmhash_cc_len_32_with_seeds_vals(
   a += x;
   a += y;
   b += ror64(a, 44);
-  return make_uint128_t(a + z, b + c);
+  return make_fh_uint128_t(a + z, b + c);
 }
 
 // Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-static inline uint128_t weak_farmhash_cc_len_32_with_seeds(
+static inline fh_uint128_t weak_farmhash_cc_len_32_with_seeds(
     const char* s, uint64_t a, uint64_t b) {
   return weak_farmhash_cc_len_32_with_seeds_vals(fetch64(s),
                                 fetch64(s + 8),
@@ -1444,9 +1444,9 @@ static inline uint128_t weak_farmhash_cc_len_32_with_seeds(
 
 // A subroutine for cityhash128().  Returns a decent 128-bit hash for strings
 // of any length representable in signed long.  Based on City and Murmur.
-static inline uint128_t farmhash_cc_city_murmur(const char *s, size_t len, uint128_t seed) {
-  uint64_t a = uint128_t_low64(seed);
-  uint64_t b = uint128_t_high64(seed);
+static inline fh_uint128_t farmhash_cc_city_murmur(const char *s, size_t len, fh_uint128_t seed) {
+  uint64_t a = fh_uint128_t_low64(seed);
+  uint64_t b = fh_uint128_t_high64(seed);
   uint64_t c = 0;
   uint64_t d = 0;
   signed long l = len - 16;
@@ -1471,19 +1471,19 @@ static inline uint128_t farmhash_cc_city_murmur(const char *s, size_t len, uint1
   }
   a = farmhash_len_16(a, c);
   b = farmhash_len_16(d, b);
-  return make_uint128_t(a ^ b, farmhash_len_16(b, a));
+  return make_fh_uint128_t(a ^ b, farmhash_len_16(b, a));
 }
 
-uint128_t farmhash128_cc_city_with_seed(const char *s, size_t len, uint128_t seed) {
+fh_uint128_t farmhash128_cc_city_with_seed(const char *s, size_t len, fh_uint128_t seed) {
   if (len < 128) {
     return farmhash_cc_city_murmur(s, len, seed);
   }
 
   // We expect len >= 128 to be the common case.  Keep 56 bytes of state:
   // v, w, x, y, and z.
-  uint128_t v, w;
-  uint64_t x = uint128_t_low64(seed);
-  uint64_t y = uint128_t_high64(seed);
+  fh_uint128_t v, w;
+  uint64_t x = fh_uint128_t_low64(seed);
+  uint64_t y = fh_uint128_t_high64(seed);
   uint64_t z = len * k1;
   v.a = ror64(y ^ k1, 49) * k1 + fetch64(s);
   v.b = ror64(v.a, 42) * k1 + fetch64(s + 8);
@@ -1534,18 +1534,18 @@ uint128_t farmhash128_cc_city_with_seed(const char *s, size_t len, uint128_t see
   // different 56-byte-to-8-byte hashes to get a 16-byte final result.
   x = farmhash_len_16(x, v.a);
   y = farmhash_len_16(y + z, w.a);
-  return make_uint128_t(farmhash_len_16(x + v.b, w.b) + y,
+  return make_fh_uint128_t(farmhash_len_16(x + v.b, w.b) + y,
                    farmhash_len_16(x + w.b, y + v.b));
 }
 
-static inline uint128_t farmhash128_cc_city(const char *s, size_t len) {
+static inline fh_uint128_t farmhash128_cc_city(const char *s, size_t len) {
   return len >= 16 ?
       farmhash128_cc_city_with_seed(s + 16, len - 16,
-                          make_uint128_t(fetch64(s), fetch64(s + 8) + k0)) :
-      farmhash128_cc_city_with_seed(s, len, make_uint128_t(k0, k1));
+                          make_fh_uint128_t(fetch64(s), fetch64(s + 8) + k0)) :
+      farmhash128_cc_city_with_seed(s, len, make_fh_uint128_t(k0, k1));
 }
 
-uint128_t farmhash_cc_fingerprint128(const char* s, size_t len) {
+fh_uint128_t farmhash_cc_fingerprint128(const char* s, size_t len) {
   return farmhash128_cc_city(s, len);
 }
 
@@ -1630,7 +1630,7 @@ uint64_t farmhash64_with_seeds(const char* s, size_t len, uint64_t seed0, uint64
 // Hash function for a byte array.
 // May change from time to time, may differ on different platforms, may differ
 // depending on NDEBUG.
-uint128_t farmhash128(const char* s, size_t len) {
+fh_uint128_t farmhash128(const char* s, size_t len) {
   return debug_tweak128(farmhash_cc_fingerprint128(s, len));
 }
 
@@ -1638,7 +1638,7 @@ uint128_t farmhash128(const char* s, size_t len) {
 // hashed into the result.
 // May change from time to time, may differ on different platforms, may differ
 // depending on NDEBUG.
-uint128_t farmhash128_with_seed(const char* s, size_t len, uint128_t seed) {
+fh_uint128_t farmhash128_with_seed(const char* s, size_t len, fh_uint128_t seed) {
   return debug_tweak128(farmhash128_cc_city_with_seed(s, len, seed));
 }
 
@@ -1657,6 +1657,6 @@ uint64_t farmhash_fingerprint64(const char* s, size_t len) {
 }
 
 // Fingerprint function for a byte array.
-uint128_t farmhash_fingerprint128(const char* s, size_t len) {
+fh_uint128_t farmhash_fingerprint128(const char* s, size_t len) {
   return farmhash_cc_fingerprint128(s, len);
 }

@@ -3047,7 +3047,7 @@ bool farmhash_cc_test(int offset, int len) {
     is_alive(farmhash32_cc(data, len++));
 
     {
-      uint128_t u = farmhash_cc_fingerprint128(data, len++);
+      fh_uint128_t u = farmhash_cc_fingerprint128(data, len++);
 
       uint64_t h = uint128_t_low64(u);
       is_alive(h >> 32);
@@ -3067,7 +3067,7 @@ bool farmhash_cc_test(int offset, int len) {
   CHECK(farmhash32_cc(data + offset, len), farmhash_cc_expected);
 
   {
-    uint128_t u = farmhash_cc_fingerprint128(data + offset, len);
+    fh_uint128_t u = farmhash_cc_fingerprint128(data + offset, len);
 
     uint64_t h = uint128_t_low64(u);
     CHECK(h >> 32, farmhash_cc_expected);
@@ -3079,8 +3079,8 @@ bool farmhash_cc_test(int offset, int len) {
   }
 
   {
-    uint128_t u = farmhash128_cc_city_with_seed(
-        data + offset, len, make_uint128_t(SEED0, SEED1));
+    fh_uint128_t u = farmhash128_cc_city_with_seed(
+        data + offset, len, make_fh_uint128_t(SEED0, SEED1));
 
     uint64_t h = uint128_t_low64(u);
     CHECK(h >> 32, farmhash_cc_expected);
@@ -3368,7 +3368,7 @@ void farmhash_cc_dump(int offset, int len) {
   printf("%uu,\n",  farmhash32_cc(data + offset, len));
 
   {
-    uint128_t u = farmhash_cc_fingerprint128(data + offset, len);
+    fh_uint128_t u = farmhash_cc_fingerprint128(data + offset, len);
 
     uint64_t h = uint128_t_low64(u);
     printf("%luu, %luu, ", (h >> 32), ((h << 32) >> 32));
@@ -3377,8 +3377,8 @@ void farmhash_cc_dump(int offset, int len) {
     printf("%luu, %luu,\n", (h >> 32), ((h << 32) >> 32));
   }
   {
-    uint128_t u = farmhash128_cc_city_with_seed(
-        data + offset, len, make_uint128_t(SEED0, SEED1));
+    fh_uint128_t u = farmhash128_cc_city_with_seed(
+        data + offset, len, make_fh_uint128_t(SEED0, SEED1));
 
     uint64_t h = uint128_t_low64(u);
     printf("%luu, %luu, ", (h >> 32), ((h << 32) >> 32));

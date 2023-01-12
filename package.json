@@ -1,0 +1,13 @@
+{
+   "name" : "farmhash-c",
+   "version" : "0.0.2",
+   "description" : "C99 translation of Geoff Pike's and Jyrki Alakuijala's FarmHash.",
+   "homepage" : "https://github.com/mulle-c/farmhash-c",
+   "bugs" : "https://github.com/mulle-c/farmhash-c/issues",
+   "keywords" : [],
+   "license" : "MIT",
+   "repository" : {
+      "type" : "git",
+      "url" : "github:mulle-c/farmhash-c"
+   }
+}

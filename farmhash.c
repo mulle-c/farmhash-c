@@ -89,11 +89,27 @@
 #define uint64_t_in_expected_order(x) (bswap64(x))
 #endif
 
+
+// OpenBSD defines some of these
+#undef swap32
+#undef swap64
+#undef swap128
+#undef bswap32
+#undef bswap64
+#undef bswap128
+#undef fetch32
+#undef fetch64
+#undef fetch128
+#undef ror32
+#undef ror64
+#undef ror128
+
 #define PERMUTE3(a, b, c)                                                      \
   do {                                                                         \
     swap32(a, b);                                                              \
     swap32(a, c);                                                              \
   } while (0)
+
 
 static inline uint32_t bswap32(const uint32_t x) {
   uint32_t y = x;

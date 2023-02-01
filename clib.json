@@ -1,0 +1,13 @@
+{
+   "name" : "farmhash-c",
+   "version" : "0.0.3",
+   "description" : "C99 translation of Geoff Pike's and Jyrki Alakuijala's FarmHash",
+   "keywords" : [ "hash" ],
+   "license" : "MIT",
+   "repo" : "mulle-c/farmhash-c",
+   "src" : [
+      "largeint.h",
+      "farmhash.h",
+      "farmhash.c"
+   ]
+}
